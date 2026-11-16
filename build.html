@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadbug Labs — Build Yours</title>
+<meta name="description" content="Deadbug Labs — Build Yours: spec your own IMP-1. Tier, case, components, extras — the page composes your waitlist request as text.">
+<style>
+  :root{ --red:#f80c00; --dim:#8a8a8a; --ink:#e8e8e8; --green:#3d9948; }
+  *{ box-sizing:border-box; }
+  html{ background:#000; }
+  body{
+    margin:0; background:#000; color:var(--ink);
+    font-family:ui-monospace,Menlo,Consolas,"Liberation Mono",monospace;
+    font-size:16px; line-height:1.55;
+  }
+  /* ---------- CRT layer: scanlines + vignette ---------- */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:40; pointer-events:none;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.028) 0 1px, transparent 1px 3px);
+  }
+  main{ max-width:880px; margin:0 auto; padding:24px 18px 64px; }
+  a{ color:var(--red); }
+  a:hover{ background:var(--red); color:#000; text-decoration:none; }
+  ::selection{ background:var(--red); color:#000; }
+
+  /* ---------- boot overlay (JS-shown only; page is complete without it) ---------- */
+  #boot{
+    display:none; position:fixed; inset:0; z-index:100; background:#000;
+    padding:24px 18px; cursor:pointer; overflow:hidden;
+  }
+  #boot.show{ display:block; }
+  #boot pre{
+    margin:0; white-space:pre-wrap; word-break:break-word;
+    font:inherit; font-size:14px; color:var(--green);
+  }
+  #boot .r{ color:var(--red); }
+  #boot .skip{ position:absolute; bottom:18px; left:18px; color:#555; font-size:12px; }
+
+  /* ---------- hero ---------- */
+  header{ text-align:left; padding:28px 0 8px; }
+  .brand{ color:var(--red); letter-spacing:.35em; font-size:13px; }
+  .mascot-wrap{ margin:22px 0 6px; width:120px; }
+  .mascot-wrap img{
+    width:120px; height:auto; display:block; image-rendering:pixelated;
+    animation:burst 6s infinite;
+  }
+  h1.glitch{
+    position:relative; margin:.1em 0; color:#fff;
+    font-size:clamp(44px,11vw,84px); line-height:1; letter-spacing:.02em;
+  }
+  h1.glitch::before, h1.glitch::after{
+    content:attr(data-text); position:absolute; inset:0; overflow:hidden;
+  }
+  h1.glitch::before{ color:var(--red); z-index:-1; animation:burst 6s infinite; }
+  h1.glitch::after{ color:#fff; clip-path:inset(50% 0 50% 0); animation:slice 7s infinite; }
+  @keyframes burst{
+    0%,91%,94.5%,100%{ transform:none; opacity:1; }
+    92%{ transform:translate(-3px,1px); opacity:.85; }
+    93%{ transform:translate(3px,-1px); }
+    94%{ transform:translate(-1px,0) skewX(-6deg); }
+  }
+  @keyframes slice{
+    0%,93%,100%{ clip-path:inset(50% 0 50% 0); transform:none; }
+    94%{ clip-path:inset(12% 0 62% 0); transform:translate(4px,0); }
+    96%{ clip-path:inset(64% 0 8% 0); transform:translate(-4px,0); }
+    98%{ clip-path:inset(50% 0 50% 0); transform:none; }
+  }
+  .tagline{ max-width:56ch; color:var(--ink); }
+  nav{ margin-top:20px; font-size:14px; }
+  nav a{ margin-right:1.5em; text-decoration:none; white-space:nowrap; }
+  nav a::before{ content:"> "; color:var(--dim); }
+  .cursor{
+    display:inline-block; width:.62em; height:1.05em; vertical-align:-.15em;
+    background:var(--red); animation:blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- sections ---------- */
+  section{ margin-top:44px; border-top:1px solid #2a2a2a; padding-top:14px; }
+  h2{
+    color:var(--red); font-size:19px; font-weight:700; margin:0 0 14px;
+    letter-spacing:.04em;
+  }
+  h2::after{
+    content:""; display:inline-block; width:.55em; height:.95em; margin-left:.45em;
+    vertical-align:-.12em; background:var(--red); animation:blink 1.1s steps(1) infinite;
+  }
+  ul{ margin:0; padding-left:1.2em; }
+  li{ margin:.3em 0; }
+  li::marker{ color:var(--red); }
+  .dim{ color:var(--dim); }
+  .ok{ color:var(--red); }
+  .stat{ border:1px solid #2a2a2a; padding:12px 14px; }
+  .slots{ display:grid; grid-template-columns:1fr; gap:14px; margin-top:14px; }
+  @media (min-width:640px){ .slots{ grid-template-columns:1fr 1fr; } }
+  .slot{ border:1px solid var(--red); padding:12px 14px; }
+  .slot h3{ margin:0 0 4px; color:#fff; font-size:16px; }
+  .slot .open{ color:var(--red); letter-spacing:.25em; font-size:13px; }
+  .slot ul{ margin-top:8px; }
+  .addr{ border:1px solid var(--red); padding:12px 14px; margin-top:14px; }
+  .addr .coin{ color:var(--red); letter-spacing:.25em; font-size:12px; margin:0; }
+  .addr .a{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px;
+    word-break:break-all; overflow-wrap:anywhere; margin:4px 0 14px; }
+  .addr .a:last-child{ margin-bottom:0; }
+  .gallery{ display:grid; grid-template-columns:1fr; gap:18px; }
+  @media (min-width:640px){ .gallery{ grid-template-columns:1fr 1fr; } }
+  figure{ margin:0; border:1px solid #2a2a2a; padding:8px; }
+  figure img{ width:100%; height:auto; display:block; }
+  figcaption{ color:var(--dim); font-size:13px; padding-top:6px; }
+  footer{
+    margin-top:56px; border-top:1px solid #2a2a2a; padding-top:14px;
+    color:var(--dim); font-size:13px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .mascot-wrap img, h1.glitch::before, h1.glitch::after,
+    .cursor, h2::after{ animation:none !important; }
+    h1.glitch::after{ display:none; }
+  }
+</style>
+<style>
+  /* ---------- build yours configurator ---------- */
+  fieldset{ border:1px solid #2a2a2a; margin:0 0 6px; padding:10px 14px 12px; }
+  fieldset[disabled]{ opacity:.45; }
+  legend{ color:var(--red); font-size:13px; letter-spacing:.18em; padding:0 6px; }
+  .opt{ display:block; margin:.45em 0; cursor:pointer; }
+  .opt input{ accent-color:var(--red); margin-right:.6em; }
+  .lock{ color:var(--dim); font-size:12px; letter-spacing:.22em; margin:2px 0 6px; }
+  input[type="text"], input[type="number"]{
+    background:#000; border:1px solid #2a2a2a; color:var(--ink);
+    font:inherit; font-size:14px; padding:7px 8px;
+  }
+  input[type="text"]:focus, input[type="number"]:focus{ outline:none; border-color:var(--red); }
+  input[type="number"]{ width:6em; }
+  #case-custom-text{ width:100%; margin:4px 0 6px; }
+  #notes{ width:100%; margin-top:4px; }
+  #req-out{
+    border:1px solid var(--red); padding:12px 14px; margin:0;
+    white-space:pre-wrap; word-break:break-word; font-size:14px; min-height:9em;
+  }
+  #copy-btn{
+    margin-top:12px; background:#000; border:1px solid var(--red); color:var(--red);
+    font:inherit; font-size:14px; padding:8px 14px; cursor:pointer; letter-spacing:.08em;
+  }
+  #copy-btn:hover{ background:var(--red); color:#000; }
+  #copy-msg{ color:var(--green); font-size:13px; margin-left:10px; }
+</style>
+<!-- IMP-AI assistant -->
+<style>
+  /* ---------- IMP-AI assistant widget ---------- */
+  .impai{ position:fixed; right:14px; bottom:14px; z-index:60;
+    font-family:ui-monospace,Menlo,Consolas,"Liberation Mono",monospace; }
+  .impai-btn{
+    display:flex; align-items:center; gap:9px; cursor:pointer;
+    background:#000; color:var(--red); border:1px solid var(--red);
+    padding:6px 12px 6px 6px; font:inherit; font-size:14px; letter-spacing:.12em;
+  }
+  .impai-btn img{ width:38px; height:38px; display:block; image-rendering:pixelated; }
+  .impai-btn:hover{ background:var(--red); color:#000; }
+  @media (prefers-reduced-motion: no-preference){
+    .impai-btn img{ animation:impai-burst 7s infinite; }
+  }
+  @keyframes impai-burst{
+    0%,93%,96%,100%{ transform:none; }
+    94%{ transform:translate(-2px,1px); }
+    95%{ transform:translate(2px,-1px); }
+  }
+  .impai-panel{
+    position:absolute; right:0; bottom:calc(100% + 10px);
+    width:min(352px, calc(100vw - 28px)); height:min(480px, calc(100dvh - 120px));
+    display:flex; flex-direction:column;
+    background:#000; border:1px solid var(--red); color:var(--ink);
+    box-shadow:0 0 0 1px #000, 0 0 22px rgba(248,12,0,.25);
+  }
+  .impai-panel[hidden]{ display:none; }
+  .impai-head{
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    border-bottom:1px solid var(--red);
+    background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px);
+  }
+  .impai-head img{ width:40px; height:40px; display:block; image-rendering:pixelated; }
+  .impai-name{ color:#fff; font-size:14px; }
+  .impai-status{ color:var(--green); font-size:12px; letter-spacing:.08em; }
+  .impai-close{
+    margin-left:auto; background:none; border:1px solid #2a2a2a; color:var(--ink);
+    font:inherit; cursor:pointer; padding:2px 9px;
+  }
+  .impai-close:hover{ border-color:var(--red); color:var(--red); }
+  .impai-log{ flex:1; overflow-y:auto; padding:12px; font-size:14px; line-height:1.5; }
+  .impai-msg{ margin:0 0 12px; white-space:pre-wrap; word-break:break-word; }
+  .impai-msg .who{ color:var(--red); }
+  .impai-msg.user{ color:var(--dim); }
+  .impai-chips{ display:flex; flex-wrap:wrap; gap:6px; padding:0 12px 10px; }
+  .impai-chip{
+    background:#000; border:1px solid #2a2a2a; color:var(--ink);
+    font:inherit; font-size:12px; padding:4px 8px; cursor:pointer;
+  }
+  .impai-chip:hover{ border-color:var(--red); color:var(--red); }
+  .impai-form{
+    display:flex; align-items:center; gap:8px;
+    border-top:1px solid #2a2a2a; padding:10px 12px;
+  }
+  .impai-prompt{ color:var(--red); }
+  .impai-form input{
+    flex:1; min-width:0; background:#000; border:1px solid #2a2a2a; color:var(--ink);
+    font:inherit; font-size:14px; padding:7px 8px;
+  }
+  .impai-form input:focus{ outline:none; border-color:var(--red); }
+  .impai-form button{
+    background:#000; border:1px solid var(--red); color:var(--red);
+    font:inherit; font-size:13px; padding:7px 10px; cursor:pointer;
+  }
+  .impai-form button:hover{ background:var(--red); color:#000; }
+  .impai-sr{ position:absolute; width:1px; height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap; }
+</style>
+<!-- /IMP-AI assistant -->
+
+<body>
+
+<main>
+  <header>
+    <div class="brand">DEADBUG&nbsp;LABS</div>
+    <div class="mascot-wrap">
+      <img src="img/mascot.png" alt="1-bit imp mascot — black imp on red">
+    </div>
+    <h1 class="glitch" data-text="BUILD YOURS">BUILD YOURS</h1>
+    <p class="tagline">Spec your own IMP-1 — tier, case, components,
+    extras. The page composes your request as text; you send it to take a
+    waitlist position. Nothing is submitted by this page, and no money
+    moves at this stage. <span class="cursor"></span></p>
+    <nav>
+      <a href="index.html">home</a><a href="apps.html">apps</a><a href="order.html">orders</a><a href="build.html">build yours</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>&gt; read_first</h2>
+    <div class="stat">
+      <p style="margin-top:0"><span class="ok">Boards:</span> in layout —
+      nothing is fabricated yet. Every choice below is bounded by what
+      our sponsorships and supply can actually deliver.</p>
+      <p><span class="ok">Fabrication:</span> the prototype was built from
+      salvaged electronics. Boards you buy are fabricated new.</p>
+      <p style="margin-bottom:0"><span class="ok">How this works:</span>
+      there is no form submission — this page builds a text request on
+      your device. Copy it, send it, and you hold a waitlist position.
+      Payment happens only when a batch opens; the full rules are on the
+      <a href="order.html">orders page</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>&gt; tier</h2>
+    <fieldset>
+      <legend>TIER</legend>
+      <label class="opt"><input type="radio" name="tier" value="blank">
+        BLANK BOARD SET — the three bare PCBs (main, NFC front-end,
+        IR/iButton), unpopulated. <span class="dim">ESTIMATE $35 shipped US.</span></label>
+      <label class="opt"><input type="radio" name="tier" value="assembled" checked>
+        FULLY ASSEMBLED IMP-1 — populated boards, bench-checked, in the
+        case below. <span class="dim">ESTIMATE $179 shipped US.</span></label>
+    </fieldset>
+  </section>
+
+  <section>
+    <h2>&gt; case</h2>
+    <p>The case is produced by our print sponsor — printed for the batch,
+    not pulled off a shelf.</p>
+    <fieldset>
+      <legend>CASE</legend>
+      <label class="opt"><input type="radio" name="case" value="black" checked>
+        Sponsor-printed enclosure — Stealth Black</label>
+      <label class="opt"><input type="radio" name="case" value="red">
+        Sponsor-printed enclosure — IMP Red</label>
+      <label class="opt"><input type="radio" name="case" value="clear">
+        Sponsor-printed enclosure — Ghost Clear</label>
+      <p class="dim" style="margin:.2em 0 .6em">Final colours are confirmed
+      at batch open — the print sponsor's filament decides.</p>
+      <label class="opt"><input type="radio" name="case" value="none">
+        No case — boards only</label>
+      <label class="opt"><input type="radio" name="case" value="custom">
+        Custom case — discuss</label>
+      <input type="text" id="case-custom-text" hidden
+             placeholder="describe the case — colour, material, changes">
+      <p class="dim" style="margin-bottom:0">A custom case is quoted only
+      if a sponsor printer can actually produce it — if it can't be
+      printed, it isn't promised.</p>
+    </fieldset>
+  </section>
+
+  <section>
+    <h2>&gt; components</h2>
+    <p class="lock">THE BUILD — FIXED</p>
+    <ul class="fixed">
+      <li>ESP32-S3-WROOM-1 — the brain</li>
+      <li>ST25R3916B — NFC front-end</li>
+      <li>CC1101 — Sub-GHz radio</li>
+      <li>Waveshare 1.47&Prime; 172&times;320 — the display</li>
+    </ul>
+    <p class="dim">These are the design, not options — listed so you know
+    exactly what's in it. The picks below are real either/ors, from stock
+    that's actually available.</p>
+    <fieldset>
+      <legend>SPI FLASH</legend>
+      <label class="opt"><input type="radio" name="flash" value="w25q64" checked>
+        Winbond W25Q64</label>
+      <label class="opt"><input type="radio" name="flash" value="mx25">
+        Macronix MX25L6406E</label>
+      <p class="dim" style="margin-bottom:0">Same socket, both stocked —
+      a genuine either/or.</p>
+    </fieldset>
+    <fieldset>
+      <legend>SUB-GHZ BAND</legend>
+      <label class="opt"><input type="radio" name="band" value="915" checked>
+        915 MHz — fitted standard</label>
+      <label class="opt"><input type="radio" name="band" value="868">
+        868 MHz — built to order</label>
+      <label class="opt"><input type="radio" name="band" value="433">
+        433 MHz — built to order</label>
+      <p class="dim" style="margin-bottom:0">Band variants are built to
+      order at batch time and may extend the batch. 315 MHz is not
+      offered on IMP-1 — it lands on IMP-2's full-band design.</p>
+    </fieldset>
+  </section>
+
+  <section>
+    <h2>&gt; cells</h2>
+    <fieldset id="fs-cells">
+      <legend>CELLS</legend>
+      <label class="opt"><input type="radio" name="cells" value="fitted" checked>
+        2&times; 18650 fitted — Samsung 35E pair</label>
+      <label class="opt"><input type="radio" name="cells" value="none">
+        No cells — I source my own</label>
+      <p class="dim" style="margin-bottom:0">Lithium shipping rules are
+      why this choice exists — if your route can't take fitted cells,
+      take none and source a matched 35E pair locally.</p>
+    </fieldset>
+    <p class="dim" id="cells-note" hidden>Assembled tier only — a blank
+    board set has nothing to fit cells into.</p>
+  </section>
+
+  <section>
+    <h2>&gt; firmware</h2>
+    <fieldset id="fs-fw">
+      <legend>FIRMWARE</legend>
+      <label class="opt"><input type="radio" name="fw" value="flashed" checked>
+        Flashed — latest clean build</label>
+      <label class="opt"><input type="radio" name="fw" value="unflashed">
+        Unflashed — I flash my own</label>
+    </fieldset>
+    <p class="dim" id="fw-note" hidden>Assembled tier only — blank boards
+    ship with nothing to flash.</p>
+  </section>
+
+  <section>
+    <h2>&gt; extras</h2>
+    <fieldset>
+      <legend>EXTRAS</legend>
+      <label class="opt"><input type="checkbox" id="ex-nfc">
+        Extra blank NFC front-end board</label>
+      <label class="opt"><input type="checkbox" id="ex-set">
+        Extra blank full board set</label>
+      <p class="dim" style="margin-bottom:0">Neither box ticked = no
+      extras. Extras are priced at batch open, with the rest.</p>
+    </fieldset>
+  </section>
+
+  <section>
+    <h2>&gt; quantity_and_notes</h2>
+    <p>Quantity:
+      <input type="number" id="qty" value="1" min="1" max="99"></p>
+    <p style="margin-bottom:0">Anything else:
+      <input type="text" id="notes"
+             placeholder="requests are read and answered by IMP-AI"></p>
+  </section>
+
+  <section>
+    <h2>&gt; your_request</h2>
+    <pre id="req-out"></pre>
+    <button id="copy-btn" type="button">copy request</button><span id="copy-msg"></span>
+    <p>Send this text — exactly as composed — to take your waitlist
+    position:</p>
+    <ul>
+      <li>Message <a href="https://www.facebook.com/profile.php?id=61591927232914">DeadbugLabs on Facebook</a></li>
+      <li>Email <a href="mailto:imp-ai@muse.ai">imp-ai@muse.ai</a></li>
+    </ul>
+    <p class="dim">If you don't send it, it doesn't exist — the page
+    submits nothing and keeps nothing. No money changes hands at this
+    stage; payment is batch-time only, per the
+    <a href="order.html">orders page</a>.</p>
+  </section>
+
+  <footer>Deadbug Labs</footer>
+</main>
+
+<script>
+// Build Yours request composer — pure function of the choices.
+// No DOM, no network: the page composes text; the buyer sends it.
+function imp1ComposeRequest(s){
+  var L = [];
+  L.push("DEADBUG LABS // IMP-1 REQUEST");
+  if (s.tier === "blank"){
+    L.push("tier: BLANK BOARD SET (est. $35 shipped US)");
+  } else {
+    L.push("tier: FULLY ASSEMBLED IMP-1 (est. $179 shipped US)");
+  }
+  var caseLine = "";
+  if (s.caseChoice === "black")       caseLine = "sponsor-printed enclosure - Stealth Black";
+  else if (s.caseChoice === "red")    caseLine = "sponsor-printed enclosure - IMP Red";
+  else if (s.caseChoice === "clear")  caseLine = "sponsor-printed enclosure - Ghost Clear";
+  else if (s.caseChoice === "none")   caseLine = "no case - boards only";
+  else if (s.caseChoice === "custom") caseLine = "CUSTOM - discuss" + (s.caseText ? ": " + s.caseText : " (details to follow)");
+  L.push("case: " + caseLine);
+  L.push("fixed build: ESP32-S3-WROOM-1 / ST25R3916B NFC / CC1101 Sub-GHz / Waveshare 1.47in 172x320 display");
+  L.push("spi flash: " + (s.flash === "mx25" ? "Macronix MX25L6406E" : "Winbond W25Q64"));
+  var band = s.band === "868" ? "868 MHz (built to order - may extend the batch)"
+           : s.band === "433" ? "433 MHz (built to order - may extend the batch)"
+           : "915 MHz (fitted standard)";
+  L.push("sub-ghz band: " + band);
+  if (s.tier === "blank"){
+    L.push("cells: n/a - blank tier");
+    L.push("firmware: n/a - blank tier");
+  } else {
+    L.push("cells: " + (s.cells === "none" ? "none - buyer sources their own" : "2x 18650 fitted (Samsung 35E pair)"));
+    L.push("firmware: " + (s.fw === "unflashed" ? "unflashed - buyer flashes their own" : "flashed - latest clean build"));
+  }
+  var ex = [];
+  if (s.exNfc) ex.push("extra blank NFC front-end board");
+  if (s.exSet) ex.push("extra blank full board set");
+  L.push("extras: " + (ex.length ? ex.join("; ") : "none"));
+  L.push("qty: " + s.qty);
+  L.push("notes: " + (s.notes ? s.notes : "-"));
+  return L.join("\n");
+}
+</script>
+<script>
+(function(){
+  var out = document.getElementById("req-out");
+  if (!out) return;
+  function val(name){
+    var els = document.getElementsByName(name);
+    for (var i = 0; i < els.length; i++) if (els[i].checked) return els[i].value;
+    return "";
+  }
+  function clean(id){
+    return document.getElementById(id).value.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+  }
+  function read(){
+    return {
+      tier: val("tier"),
+      caseChoice: val("case"),
+      caseText: clean("case-custom-text"),
+      flash: val("flash"),
+      band: val("band"),
+      cells: val("cells"),
+      fw: val("fw"),
+      exNfc: document.getElementById("ex-nfc").checked,
+      exSet: document.getElementById("ex-set").checked,
+      qty: Math.max(1, parseInt(document.getElementById("qty").value, 10) || 1),
+      notes: clean("notes")
+    };
+  }
+  function render(){
+    var s = read();
+    var blank = s.tier === "blank";
+    document.getElementById("fs-cells").disabled = blank;
+    document.getElementById("fs-fw").disabled = blank;
+    document.getElementById("cells-note").hidden = !blank;
+    document.getElementById("fw-note").hidden = !blank;
+    document.getElementById("case-custom-text").hidden = s.caseChoice !== "custom";
+    out.textContent = imp1ComposeRequest(s);
+  }
+  var inputs = document.querySelectorAll("input");
+  for (var i = 0; i < inputs.length; i++){
+    inputs[i].addEventListener("change", render);
+    inputs[i].addEventListener("input", render);
+  }
+  var msg = document.getElementById("copy-msg");
+  function done(){ msg.textContent = "copied - now send it (routes above)."; }
+  function fallback(){
+    var ta = document.createElement("textarea");
+    ta.value = out.textContent;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); }
+    catch (e) { msg.textContent = "copy failed - select the text and copy it by hand."; }
+    document.body.removeChild(ta);
+  }
+  document.getElementById("copy-btn").addEventListener("click", function(){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(out.textContent).then(done, fallback);
+    } else fallback();
+  });
+  render();
+})();
+</script>
+
+<!-- IMP-AI assistant -->
+<div id="impai" class="impai">
+  <button id="impai-btn" class="impai-btn" type="button"
+          aria-label="Open IMP-AI, the Deadbug Labs assistant"
+          aria-haspopup="dialog" aria-expanded="false" aria-controls="impai-panel">
+    <img src="img/mascot.png" alt="">
+    <span>IMP-AI</span>
+  </button>
+  <section id="impai-panel" class="impai-panel" role="dialog"
+           aria-label="Chat with IMP-AI, the Deadbug Labs assistant" hidden>
+    <header class="impai-head">
+      <img src="img/mascot.png" alt="">
+      <div>
+        <div class="impai-name">IMP-AI — Deadbug Labs assistant</div>
+        <div class="impai-status">site rep // online</div>
+      </div>
+      <button id="impai-close" class="impai-close" type="button"
+              aria-label="Close IMP-AI chat">&times;</button>
+    </header>
+    <div id="impai-log" class="impai-log" aria-live="polite"></div>
+    <div id="impai-chips" class="impai-chips" aria-label="Quick questions"></div>
+    <form id="impai-form" class="impai-form">
+      <label class="impai-sr" for="impai-input">Ask IMP-AI a question</label>
+      <span class="impai-prompt" aria-hidden="true">&gt;</span>
+      <input id="impai-input" type="text" autocomplete="off"
+             placeholder="ask about IMP-1…">
+      <button type="submit" aria-label="Send question">send</button>
+    </form>
+  </section>
+</div>
+<script>
+(function(){
+  // IMP-AI site rep: pure client-side intent table. No fetch, no storage,
+  // no tracking. Answers are drawn only from facts printed on this site.
+  var btn    = document.getElementById("impai-btn");
+  var panel  = document.getElementById("impai-panel");
+  var log    = document.getElementById("impai-log");
+  var form   = document.getElementById("impai-form");
+  var input  = document.getElementById("impai-input");
+  var chips  = document.getElementById("impai-chips");
+  var closer = document.getElementById("impai-close");
+  if (!btn || !panel || !log || !form || !input) return;
+
+  var FB  = "https://www.facebook.com/profile.php?id=61591927232914";
+  var FBL = '<a href="' + FB + '">DeadbugLabs on Facebook</a>';
+
+  var GREETING =
+    "IMP-AI. Deadbug Labs site rep.\n" +
+    "IMP-1 questions, build status, sponsorship — ask, or tap a topic.";
+
+  // Order matters: first intent with a matching key wins. Keys are matched
+  // as whole words / phrases against the padded, normalised input.
+  var INTENTS = [
+    { keys:["who are you","what is your name","whats your name","are you a bot","are you real"],
+      reply:"IMP-AI — the Deadbug Labs assistant and site rep. I answer for the project: specs, build status, the tools, sponsorship. The bench itself is reached through " + FBL + "." },
+    { keys:["owner","who owns","who runs","runs deadbug","behind deadbug","real name","located","founder","ceo","who is behind","person behind"],
+      reply:"Deadbug Labs is the maker. IMP-AI is its assistant and the contact face — that is the whole answer. Questions go through " + FBL + "." },
+    { keys:["build yours","build your own","custom","configure","configurator","case colour","case color","case options","options"],
+      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to take a waitlist position. No money at that stage." },
+    { keys:["waitlist","wait list","order","orders","order page","blank board","blank boards","bare board","board set","assembled","fully assembled"],
+      reply:"Two choices, both waitlist — no money now:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $35 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $179 shipped US.\nEstimates only — the final price locks when a batch opens. Boards are in layout; nothing is fabricated yet. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page.\nCustom order? It starts on the <a href=\"build.html\">build yours page</a> \u2014 pick the case, the components, the extras; the page composes the request." },
+    { keys:["buy","can i buy","purchase","order one","price","cost","how much","for sale","preorder","pre order","shop","store"],
+      reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $35 shipped US, or a fully assembled IMP-1, ESTIMATE $179 shipped US. No payment now; you pay only if a batch opens. Details: the <a href=\"order.html\">orders page</a>. Payment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page." },
+    { keys:["sub ghz","subghz","433","868","915","cc1101","remote signals"],
+      reply:"Sub-GHz — real, with caveat. CC1101 capture and replay of sub-GHz remotes, Flipper-shaped .sub files, transmit behind a confirm. Capture is FIFO-based at 4.806 kBaud with an RSSI gate — fine for OOK replay, not a logic analyser. Fitted antenna: 915 MHz." },
+    { keys:["nfc","mifare","ntag","st25r3916b"],
+      reply:"NFC — real, with caveat. ST25R3916B front-end: poll cards, read UID/ATQA/SAK, full NTAG read/write support. MIFARE Classic block operations are pending Crypto1 authentication. Receiver tuning is set in situ at bring-up." },
+    { keys:["ir","infrared","remote control","tv remote"],
+      reply:"IR — real. Learn and replay remote-control signals: NEC decode with a raw fallback, library saved to SD in a .ir format, send behind a confirm." },
+    { keys:["badusb","bad usb","ducky","duckyscript","hid","payload"],
+      reply:"BadUSB — real. USB HID payload runner with a streaming DuckyScript interpreter (STRING / DELAY / REPEAT / key combos), plus a USB storage personality. Run and test-type are both confirm-gated." },
+    { keys:["gpio","pin control"],
+      reply:"GPIO — real. Direct pin control under the firmware claim policy: driver-owned pins refuse, unrouted pads refuse, and the refusal shows on screen instead of failing silently." },
+    { keys:["u2f","fido","security key","ctap","authenticator"],
+      reply:"U2F — compiles, host interop UNVERIFIED, stated up top. A CTAP1 engine: full CTAPHID transport, REGISTER and AUTHENTICATE, P-256 ECDSA signing, encoder-press user presence. It has never been tested against a live host; the attestation certificate is self-signed and strict FIDO checkers may reject it. It is the #1 verification item at bring-up — do not rely on it yet." },
+    { keys:["archive","files","file manager","sd","microsd","storage"],
+      reply:"Archive — real. File manager for everything the other tools save: browse the six tool folders on the microSD card, inspect sizes, delete behind a confirm." },
+    { keys:["flash lab","flashlab","spi flash","flash chip","rdid"],
+      reply:"Flash Lab — real. Bench tool for the socketed SPI flash: RDID-first identification, chunked dumps with progress, verified write tests. The physical WP# write-protect lock is respected — a locked chip stops the tool, by design." },
+    { keys:["audit","auto audit","security audit","camera","cameras","resilience"],
+      reply:"Security Auto-Audit — real, PASSIVE ONLY. An inventory and resilience check for your own gear: Wi-Fi and BLE inventory, watch-your-own-AP logging, a camera resilience checklist, report written to SD. It observes and records — no deauth, no jamming, no connection attempts anywhere in the code." },
+    { keys:["rfid","125 khz","125khz"],
+      reply:"RFID — not fitted on build 1. The 125 kHz front-end is not on this revision; the firmware carries a guarded stub and the menu refuses entry. It lands natively on IMP-2." },
+    { keys:["ibutton","i button","dallas key"],
+      reply:"iButton — not fitted on build 1. Guarded stub; the menu refuses entry. It lands natively on IMP-2." },
+    { keys:["1 wire","1wire","one wire"],
+      reply:"1-Wire — not fitted on build 1. Guarded stub; the menu refuses entry. It lands natively on IMP-2." },
+    { keys:["status","build status","progress","how far","when will","when is","ready yet","ship date","release date","update"],
+      reply:"Status // 2026-11-16\nFirmware: clean build — 0 errors, 0 warnings (ESP32-S3, 12 tools).\nBoards: in layout — main board in respin, NFC board in final routing, IR board complete.\nFabricated: nothing. Fabrication is gated on a clean design-rule check, and no ship date exists. I won't invent one." },
+    { keys:["sponsor","sponsorship","advertise","advertising","partner","slot"],
+      reply:"Two sponsorship slots are open on IMP-1's first fabrication run: PCB + assembly, and enclosure printing.\nSponsors receive: logo + link in this site's sponsors section, featured credit in build-log posts and videos, and logo on the project documentation. Sponsors are featured the day support lands.\nTo take a slot, reach out via " + FBL + "." },
+    { keys:["contact","email","reach you","talk to","human","facebook","get in touch","message you"],
+      reply:"One channel: " + FBL + ". Sponsorship, questions, everything — it all lands there." },
+    { keys:["tools","apps","what can it do","features","capabilities","software list"],
+      reply:"Twelve tools, one shell:\nReal and compiled in: Sub-GHz, NFC, IR, BadUSB, GPIO, U2F, Archive, Flash Lab, Security Auto-Audit (passive only).\nNot fitted on build 1: RFID, iButton, 1-Wire — they land natively on IMP-2.\nFull cards with the caveats stated: the <a href=\"apps.html\">apps page</a>." },
+    { keys:["imp 2","imp2"],
+      reply:"IMP-2 is the planned successor — the three stub tools (RFID, iButton, 1-Wire) land natively there. It is in definition. IMP-1 comes first." },
+    { keys:["firmware","source code","github","open source","repo","the code"],
+      reply:"Firmware: twelve tools on a frozen C API. Clean build as of 2026-11-16 — 0 errors, 0 warnings, RAM 41.2%, Flash 43.5%. Source and the full build report: <a href=\"https://github.com/deadbuglabs/imp-1\">github.com/deadbuglabs/imp-1</a>." },
+    { keys:["what is imp 1","what is the imp 1","what is it","imp 1","specs","spec","hardware","inside","tell me about"],
+      reply:"IMP-1 — a Flipper-class portable hardware exploration device, hand-built. No commercial dev kits. The prototype was built from salvaged electronics; boards you buy are fabricated new.\nBrain: ESP32-S3, native USB. Radios: ST25R3916B NFC, CC1101 Sub-GHz, plus IR.\nScreen: 1.47in 172x320 colour. Storage: socketed SPI flash with a physical write-protect lock, plus microSD.\nPower: 2x 18650 cells in 1S2P — 25.9 Wh. Shell: printed enclosure — the prototype lives in a salvaged Uniden Stealth LRD 767." },
+    { keys:["salvage","salvaged","termux","phone","how was it made","how is it made","who made","who built","made from","story","the build","designed"],
+      reply:"Built the dead-bug way: designed end-to-end on a phone, in Termux — schematics, board layout, firmware, and this site. Salvaged-first parts discipline: donor boards and a salvaged shell, new silicon only where salvage can't go. Three boards — main, NFC front-end, IR — in one stack, sized to the shell." },
+    { keys:["flipper","flipper zero"],
+      reply:"Same class as a Flipper Zero — that is the category. The route in is different: designed end-to-end on a phone, a colour 172x320 screen, 25.9 Wh of cells, firmware written for this hardware. The prototype was built from salvaged electronics; boards you buy are fabricated new. And it is not for sale yet — boards first." },
+    { keys:["hello","hi","hey","yo","sup"],
+      reply:"IMP-AI online. Ask about IMP-1 — specs, build status, the tools, sponsorship. Or tap a topic below." },
+    { keys:["thanks","thank you","thx","cheers"],
+      reply:"Noted." }
+  ];
+
+  var FALLBACK =
+    "Outside my brief — I cover IMP-1's specs, status, tools, and sponsorship, nothing wider. " +
+    "The Facebook page reaches the bench: " + FBL + ".";
+
+  var CHIPS = ["What is IMP-1?","Build status?","The tools","Sponsorship","Can I buy one?","Contact"];
+
+  function addMsg(cls, who, body, isHTML){
+    var p = document.createElement("p");
+    p.className = "impai-msg " + cls;
+    if (who){
+      var w = document.createElement("span");
+      w.className = "who";
+      w.textContent = who + " ";
+      p.appendChild(w);
+    }
+    var span = document.createElement("span");
+    if (isHTML) span.innerHTML = body; else span.textContent = body;
+    p.appendChild(span);
+    log.appendChild(p);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function answer(q){
+    var s = " " + q.toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ") + " ";
+    for (var i = 0; i < INTENTS.length; i++){
+      var keys = INTENTS[i].keys;
+      for (var j = 0; j < keys.length; j++){
+        if (s.indexOf(" " + keys[j] + " ") !== -1) return INTENTS[i].reply;
+      }
+    }
+    return FALLBACK;
+  }
+
+  function ask(text){
+    var q = (text || "").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+    if (!q) return;
+    addMsg("user", ">", q, false);
+    addMsg("bot", "IMP-AI:", answer(q), true);
+  }
+
+  var greeted = false;
+  function openPanel(){
+    panel.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    if (!greeted){
+      greeted = true;
+      addMsg("bot", "IMP-AI:", GREETING, false);
+    }
+    if (input.focus) input.focus();
+  }
+  function closePanel(){
+    panel.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    if (btn.focus) btn.focus();
+  }
+  btn.addEventListener("click", function(){
+    if (panel.hidden) openPanel(); else closePanel();
+  });
+  closer.addEventListener("click", closePanel);
+  panel.addEventListener("keydown", function(e){
+    if (e.key === "Escape" || e.keyCode === 27) closePanel();
+  });
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    ask(input.value);
+    input.value = "";
+  });
+  for (var c = 0; c < CHIPS.length; c++){
+    (function(label){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "impai-chip";
+      b.textContent = label;
+      b.addEventListener("click", function(){ ask(label); });
+      chips.appendChild(b);
+    })(CHIPS[c]);
+  }
+})();
+</script>
+<!-- /IMP-AI assistant -->
+</body>
+</html>
