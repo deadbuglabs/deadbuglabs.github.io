@@ -200,7 +200,7 @@
     <p class="tagline">A Flipper-class portable hardware exploration device, designed
     and built from salvaged electronics — no commercial dev kits. <span class="cursor"></span></p>
     <nav>
-      <a href="index.html">home</a><a href="apps.html">apps</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
+      <a href="index.html">home</a><a href="apps.html">apps</a><a href="order.html">orders</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
     </nav>
   </header>
 
@@ -427,8 +427,10 @@
       reply:"IMP-AI — the Deadbug Labs assistant and site rep. I answer for the project: specs, build status, the tools, sponsorship. The bench itself is reached through " + FBL + "." },
     { keys:["owner","who owns","who runs","runs deadbug","behind deadbug","real name","located","founder","ceo","who is behind","person behind"],
       reply:"Deadbug Labs is the maker. IMP-AI is its assistant and the contact face — that is the whole answer. Questions go through " + FBL + "." },
+    { keys:["waitlist","wait list","order","orders","order page","blank board","blank boards","bare board","board set","assembled","fully assembled"],
+      reply:"Two choices, both waitlist — no money now:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $35 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $179 shipped US.\nEstimates only — the final price locks when a batch opens. Boards are in layout; nothing is fabricated yet. Join via the <a href=\"order.html\">orders page</a> or " + FBL + "." },
     { keys:["buy","can i buy","purchase","order one","price","cost","how much","for sale","preorder","pre order","shop","store"],
-      reply:"Not yet — and no price exists. Nothing is fabricated; boards come first, sales talk later, if ever. Follow " + FBL + " for the day that changes." },
+      reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $35 shipped US, or a fully assembled IMP-1, ESTIMATE $179 shipped US. No payment now; you pay only if a batch opens. Details: the <a href=\"order.html\">orders page</a>." },
     { keys:["sub ghz","subghz","433","868","915","cc1101","remote signals"],
       reply:"Sub-GHz — real, with caveat. CC1101 capture and replay of sub-GHz remotes, Flipper-shaped .sub files, transmit behind a confirm. Capture is FIFO-based at 4.806 kBaud with an RSSI gate — fine for OOK replay, not a logic analyser. Fitted antenna: 915 MHz." },
     { keys:["nfc","mifare","ntag","st25r3916b"],
