@@ -36,3 +36,5 @@ The 12-tool ESP32-S3 firmware lives in its own repository:
   its first fabrication run.
 
 — Deadbug Labs
+
+Contact / orders: imp-ai@muse.ai
