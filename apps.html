@@ -182,7 +182,7 @@
     and where it actually stands. Statuses are taken from the build report,
     not the brochure. <span class="cursor"></span></p>
     <nav>
-      <a href="index.html">home</a><a href="apps.html">apps</a><a href="order.html">orders</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
+      <a href="index.html">home</a><a href="apps.html">apps</a><a href="order.html">orders</a><a href="build.html">build yours</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
     </nav>
   </header>
 
@@ -372,8 +372,10 @@
       reply:"IMP-AI — the Deadbug Labs assistant and site rep. I answer for the project: specs, build status, the tools, sponsorship. The bench itself is reached through " + FBL + "." },
     { keys:["owner","who owns","who runs","runs deadbug","behind deadbug","real name","located","founder","ceo","who is behind","person behind"],
       reply:"Deadbug Labs is the maker. IMP-AI is its assistant and the contact face — that is the whole answer. Questions go through " + FBL + "." },
+    { keys:["build yours","build your own","custom","configure","configurator","case colour","case color","case options","options"],
+      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to take a waitlist position. No money at that stage." },
     { keys:["waitlist","wait list","order","orders","order page","blank board","blank boards","bare board","board set","assembled","fully assembled"],
-      reply:"Two choices, both waitlist — no money now:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $35 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $179 shipped US.\nEstimates only — the final price locks when a batch opens. Boards are in layout; nothing is fabricated yet. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page." },
+      reply:"Two choices, both waitlist — no money now:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $35 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $179 shipped US.\nEstimates only — the final price locks when a batch opens. Boards are in layout; nothing is fabricated yet. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page.\nCustom order? It starts on the <a href=\"build.html\">build yours page</a> \u2014 pick the case, the components, the extras; the page composes the request." },
     { keys:["buy","can i buy","purchase","order one","price","cost","how much","for sale","preorder","pre order","shop","store"],
       reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $35 shipped US, or a fully assembled IMP-1, ESTIMATE $179 shipped US. No payment now; you pay only if a batch opens. Details: the <a href=\"order.html\">orders page</a>. Payment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page." },
     { keys:["sub ghz","subghz","433","868","915","cc1101","remote signals"],
@@ -413,11 +415,11 @@
     { keys:["firmware","source code","github","open source","repo","the code"],
       reply:"Firmware: twelve tools on a frozen C API. Clean build as of 2026-11-16 — 0 errors, 0 warnings, RAM 41.2%, Flash 43.5%. Source and the full build report: <a href=\"https://github.com/deadbuglabs/imp-1\">github.com/deadbuglabs/imp-1</a>." },
     { keys:["what is imp 1","what is the imp 1","what is it","imp 1","specs","spec","hardware","inside","tell me about"],
-      reply:"IMP-1 — a Flipper-class portable hardware exploration device, hand-built from salvaged electronics. No commercial dev kits.\nBrain: ESP32-S3, native USB. Radios: ST25R3916B NFC, CC1101 Sub-GHz, plus IR.\nScreen: 1.47in 172x320 colour. Storage: socketed SPI flash with a physical write-protect lock, plus microSD.\nPower: 2x 18650 cells in 1S2P — 25.9 Wh. Shell: a salvaged Uniden Stealth LRD 767." },
+      reply:"IMP-1 — a Flipper-class portable hardware exploration device, hand-built. No commercial dev kits. The prototype was built from salvaged electronics; boards you buy are fabricated new.\nBrain: ESP32-S3, native USB. Radios: ST25R3916B NFC, CC1101 Sub-GHz, plus IR.\nScreen: 1.47in 172x320 colour. Storage: socketed SPI flash with a physical write-protect lock, plus microSD.\nPower: 2x 18650 cells in 1S2P — 25.9 Wh. Shell: printed enclosure — the prototype lives in a salvaged Uniden Stealth LRD 767." },
     { keys:["salvage","salvaged","termux","phone","how was it made","how is it made","who made","who built","made from","story","the build","designed"],
       reply:"Built the dead-bug way: designed end-to-end on a phone, in Termux — schematics, board layout, firmware, and this site. Salvaged-first parts discipline: donor boards and a salvaged shell, new silicon only where salvage can't go. Three boards — main, NFC front-end, IR — in one stack, sized to the shell." },
     { keys:["flipper","flipper zero"],
-      reply:"Same class as a Flipper Zero — that is the category. The route in is different: salvaged electronics instead of a factory line, a colour 172x320 screen, 25.9 Wh of cells, firmware written for this hardware. And it is not for sale yet — boards first." },
+      reply:"Same class as a Flipper Zero — that is the category. The route in is different: designed end-to-end on a phone, a colour 172x320 screen, 25.9 Wh of cells, firmware written for this hardware. The prototype was built from salvaged electronics; boards you buy are fabricated new. And it is not for sale yet — boards first." },
     { keys:["hello","hi","hey","yo","sup"],
       reply:"IMP-AI online. Ask about IMP-1 — specs, build status, the tools, sponsorship. Or tap a topic below." },
     { keys:["thanks","thank you","thx","cheers"],
