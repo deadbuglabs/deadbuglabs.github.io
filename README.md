@@ -27,7 +27,7 @@ Pages (no build step).
 ## Firmware
 
 The 12-tool ESP32-S3 firmware lives in its own repository:
-[github.com/tclover23/imp-1](https://github.com/tclover23/imp-1)
+[github.com/deadbuglabs/imp-1](https://github.com/deadbuglabs/imp-1)
 
 ## Links
 
