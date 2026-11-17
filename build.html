@@ -228,9 +228,9 @@
     </div>
     <h1 class="glitch" data-text="BUILD YOURS">BUILD YOURS</h1>
     <p class="tagline">Spec your own IMP-1 — tier, case, components,
-    extras. The page composes your request as text; you send it to take a
-    waitlist position. Nothing is submitted by this page, and no money
-    moves at this stage. <span class="cursor"></span></p>
+    extras. The page composes your request as text; you send it to get on
+    the list, then pay in full to reserve — first paid, first built.
+    Nothing is submitted by this page. <span class="cursor"></span></p>
     <nav>
       <a href="index.html">home</a><a href="apps.html">apps</a><a href="order.html">orders</a><a href="build.html">build yours</a><a href="https://github.com/deadbuglabs/imp-1">firmware</a><a href="https://www.facebook.com/profile.php?id=61591927232914">facebook</a>
     </nav>
@@ -246,8 +246,9 @@
       salvaged electronics. Boards you buy are fabricated new.</p>
       <p style="margin-bottom:0"><span class="ok">How this works:</span>
       there is no form submission — this page builds a text request on
-      your device. Copy it, send it, and you hold a waitlist position.
-      Payment happens only when a batch opens; the full rules are on the
+      your device. Copy it, send it, and you are on the list — then pay
+      in full to reserve: the build queue is payment order, first paid,
+      first built. The full rules are on the
       <a href="order.html">orders page</a>.</p>
     </div>
   </section>
@@ -364,7 +365,8 @@
       <label class="opt"><input type="checkbox" id="ex-set">
         Extra blank full board set</label>
       <p class="dim" style="margin-bottom:0">Neither box ticked = no
-      extras. Extras are priced at batch open, with the rest.</p>
+      extras. Extras are priced with the rest of your order when your
+      request is answered.</p>
     </fieldset>
   </section>
 
@@ -381,15 +383,15 @@
     <h2>&gt; your_request</h2>
     <pre id="req-out"></pre>
     <button id="copy-btn" type="button">copy request</button><span id="copy-msg"></span>
-    <p>Send this text — exactly as composed — to take your waitlist
-    position:</p>
+    <p>Send this text — exactly as composed — to get on the list:</p>
     <ul>
       <li>Message <a href="https://www.facebook.com/profile.php?id=61591927232914">DeadbugLabs on Facebook</a></li>
       <li>Email <a href="mailto:imp-ai@muse.ai">imp-ai@muse.ai</a></li>
     </ul>
     <p class="dim">If you don't send it, it doesn't exist — the page
-    submits nothing and keeps nothing. No money changes hands at this
-    stage; payment is batch-time only, per the
+    submits nothing and keeps nothing. Sending the request puts you on
+    the list; paying in full completes the reservation and sets your
+    queue place — first paid, first built — per the
     <a href="order.html">orders page</a>.</p>
   </section>
 
@@ -556,11 +558,11 @@ function imp1ComposeRequest(s){
     { keys:["owner","who owns","who runs","runs deadbug","behind deadbug","real name","located","founder","ceo","who is behind","person behind"],
       reply:"Deadbug Labs is the maker. IMP-AI is its assistant and the contact face — that is the whole answer. Questions go through " + FBL + "." },
     { keys:["build yours","build your own","custom","configure","configurator","case colour","case color","case options","options"],
-      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to take a waitlist position. No money at that stage." },
+      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to get on the list — then pay in full to set your queue place: first paid, first built." },
     { keys:["waitlist","wait list","order","orders","order page","blank board","blank boards","bare board","board set","assembled","fully assembled"],
-      reply:"Two choices, both waitlist — no money now:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $40 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $180 shipped US.\nEstimates only — the final price locks when a batch opens. Boards are in layout; nothing is fabricated yet. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page.\nCustom order? It starts on the <a href=\"build.html\">build yours page</a> \u2014 pick the case, the components, the extras; the page composes the request." },
+      reply:"Two choices — pay in full to reserve; the build queue is payment order, first paid first built:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $40 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $180 shipped US.\nEstimates: if the final batch price comes in below the amount you paid, the difference is made up with free extras included in your shipment; if it comes in over the estimate, you can top up the difference or take a full refund — and a full refund any time before your build starts. Boards are in layout; nothing is fabricated yet, and nothing ships until the boards are fabricated and the first article passes bench checks. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), in full, to the addresses on the orders page.\nCustom order? It starts on the <a href=\"build.html\">build yours page</a> \u2014 pick the case, the components, the extras; the page composes the request." },
     { keys:["buy","can i buy","purchase","order one","price","cost","how much","for sale","preorder","pre order","shop","store"],
-      reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $40 shipped US, or a fully assembled IMP-1, ESTIMATE $180 shipped US. No payment now; you pay only if a batch opens. Details: the <a href=\"order.html\">orders page</a>. Payment is crypto (BTC or XMR), due when a batch opens \u2014 the addresses live on the orders page." },
+      reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $40 shipped US, or a fully assembled IMP-1, ESTIMATE $180 shipped US. Pay the estimate in full to reserve — first paid, first built; full refund any time before your build starts. Details: the <a href=\"order.html\">orders page</a>. Payment is crypto (BTC or XMR), in full, to the addresses on the orders page." },
     { keys:["sub ghz","subghz","433","868","915","cc1101","remote signals"],
       reply:"Sub-GHz — real, with caveat. CC1101 capture and replay of sub-GHz remotes, Flipper-shaped .sub files, transmit behind a confirm. Capture is FIFO-based at 4.806 kBaud with an RSSI gate — fine for OOK replay, not a logic analyser. Fitted antenna: 915 MHz." },
     { keys:["nfc","mifare","ntag","st25r3916b"],
