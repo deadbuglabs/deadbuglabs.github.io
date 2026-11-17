@@ -231,6 +231,9 @@
       this line sells measurement. That is not a limitation of the
       product — it is the product.</p>
     </div>
+    <p class="dim">One deliberate exclusion, on the record: no word-bank
+    devices. A word bank driven by sensor noise performs — it does not
+    measure. This line ships instruments, not performances.</p>
   </section>
 
   <section>
@@ -243,19 +246,36 @@
     <ul>
       <li><span class="ok">DC magnetic field</span> — 3-axis magnetometer, numeric µT per axis + magnitude</li>
       <li><span class="ok">AC EMF</span> — sense coil + op-amp front end, calibrated milligauss readout. The K-II function done as an instrument: a number, logged — a spike nobody was watching is still in the record</li>
+      <li><span class="ok">AC electric field</span> — E-field probe, numeric V/m readout</li>
+      <li><span class="ok">RF density</span> — broadband RF detector, mW/m² class readout + trend. With the coil, the hub covers the full TriField-class broadband EMF trio — AC magnetic, AC electric, and RF — plus the DC vector the TriField class doesn't give you</li>
       <li><span class="ok">RF sweep</span> — AM/FM/SW receiver, adjustable sweep rate and direction, speaker output. The audio is receiver output — broadcast fragments and band noise, chopped by the sweep — and the sweep settings are logged so a session is reproducible</li>
+      <li><span class="ok">EVP recorder</span> — a dedicated audio channel, separate from the sweep receiver: WAV at 48 kHz / 24-bit class to the same card, on the same clock, with live headphone monitoring. A voice on the recording and a fragment off the sweep are never confused in the log</li>
       <li><span class="ok">Temperature / humidity</span> — °C / %RH</li>
       <li><span class="ok">Barometric pressure</span> — hPa, trended</li>
+      <li><span class="ok">CO2 / air quality</span> — NDIR CO2 in ppm plus an air-quality index, logged</li>
+      <li><span class="ok">Carbon monoxide</span> — electrochemical CO cell, ppm, logged, with a safety alarm. This is the debunker's instrument: CO poisoning and stale, high-CO2 air produce dread, headache, and a sense of presence — a documented class of “haunted house” reports with a physical cause. The alarm comes first; the data is second</li>
       <li><span class="ok">Vibration / knock</span> — accelerometer with event thresholding, timestamped events</li>
       <li><span class="ok">Motion</span> — PIR, timestamped events</li>
+      <li><span class="ok">Module bay</span> — an expansion bay, logged like any other channel. First bay item: a Geiger counter module — counts per minute, in the same record</li>
     </ul>
+    <p><span class="ok">Estes Mode</span> — a hub firmware mode for the
+    Estes Method: sweep audio routes to the noise-isolating headphone
+    output only, the display dims and blanks, and the second operator
+    marks each question in the log — a button press on the hub, or a
+    voice mark on the EVP channel — so every answer fragment in the
+    recording sits next to the question that preceded it, on the clock.
+    The method is the investigators'; the mode just makes its record
+    reviewable.</p>
     <p>Performs as real equipment — design targets, verified at bring-up
     before any unit is described by them:</p>
     <ul>
       <li>Magnetometer: ±1600 µT class range, noise floor ≤0.5 µT RMS target, 10–50 Hz sampling</li>
       <li>AC EMF: 0.1 mG resolution target across ~0–100 mG in the calibrated band; per-unit calibration against a known reference field, cal date recorded in the session manifest</li>
+      <li>E-field: ~0–1,000 V/m class; RF density: mW/m² class readout, detector band stated on the spec sheet</li>
       <li>RF sweep: FM 64–108 MHz plus AM/SW per the receiver; 50–300 ms per step, adjustable</li>
+      <li>EVP audio: 48 kHz / 24-bit class WAV target, live monitor path; question marks written as event rows</li>
       <li>Temperature / humidity: ±0.2 °C / ±2 %RH class; pressure ±0.5 hPa class</li>
+      <li>CO2: ±50 ppm + 5% of reading class; CO: ±5 ppm class target at low range, alarm threshold per safety practice — the CO cell is a consumable with a stated service life</li>
       <li>Logging integrity: one monotonic timestamp across hub, pods, and camera; events written at fire time, never rounded to the grid; each session writes CSV plus a manifest (start, firmware, channel list, sweep settings, calibration date)</li>
     </ul>
   </section>
@@ -274,6 +294,18 @@
     the hub is the recorder, so pods stay cheap enough to run several
     rooms at once. A pod bought later joins the same hub and the same
     log.</p>
+    <p><span class="ok">Static pod variant</span> — a second pod adds an
+    E-field proximity channel: a static/electrostatic detector watching
+    the local electric field rather than the capacitive antenna's near
+    field. A different front end with a different false-trigger profile —
+    a mixed set gives the log two independent proximity channels to
+    correlate, instead of one beep to argue about.</p>
+    <p><span class="ok">POD LITE</span> — the trigger-object pod: the
+    light-up motion ball, done as a node. Ball-form, motion sensor and
+    light — it flashes locally <span class="ok">and</span> reports the
+    trigger to the hub with its pod ID attached. The same object
+    investigators already buy by the bag, except its trigger is in the
+    record. Priced to buy in sets.</p>
   </section>
 
   <section>
@@ -284,7 +316,16 @@
       <li><span class="ok">Full-spectrum optics</span> — the sensor ships with no IR-cut filter, the standard full-spectrum conversion used in forensics imaging: sensitive across near-UV, visible, and infrared. Starlight-class low-light sensor — the camera works in dark rooms, not despite them</li>
       <li><span class="ok">Switchable illuminators</span> — 850 nm IR (faint red glow), 940 nm IR (no visible glow), and a 365 nm UVA bank. Every saved frame records which illuminator was on, plus exposure and gain — the same shape under 940 nm and under UVA is different evidence, and the record keeps them separate</li>
       <li><span class="ok">Shape detection that saves the frame</span> — on-device person/shape detection flags a “humanoid shape” event, and the camera saves the actual frame, with its full-spectrum channel data, to microSD and syncs the event into the hub log by timestamp</li>
+      <li><span class="ok">CAM THERMAL</span> — a thermal variant: a Lepton-class radiometric thermal core blended as an overlay with the full-spectrum frame. Both frames are saved, side by side in the record, with the crosshair temperature in the log. A cold spot in the overlay is a temperature map anyone can re-read, not a colour smear. NETD &lt;50 mK class target</li>
+      <li><span class="ok">CAM DEPTH</span> — a depth variant, the SLS function: a depth channel alongside the full-spectrum sensor, with skeletal mapping in the preview. Every mapped-figure event saves the actual depth frame and the full-spectrum frame that produced it — a stick figure drawn over a saved depth frame can be judged against the frame. The overlay is a mapping of depth data, labelled as such, never an identification</li>
+      <li><span class="ok">Laser grid</span> — a grid projector pen throws a dot grid across a room; the CAM watches the grid, and a grid break — dots displaced or occluded in a region — is logged as a motion event with the frame saved. The projector is a dumb accessory; the detection and the record live in the CAM, where they belong</li>
     </ul>
+    <p><span class="ok">DVR rig mode</span> — professional teams run
+    static multi-camera DVR rigs: fixed cameras, one recorder, one
+    timeline. That is already this line's architecture, stated as a
+    named mode: multiple CAMs as fixed nodes, hub-synced clocks, and a
+    single session manifest covering every node — every camera's events
+    and frames on the one hub timeline.</p>
     <p>The Tesla parallel, stated honestly: a Tesla “sees ghosts” in the
     cemetery videos because its cameras feed a neural net that renders
     the shapes it detects — including humanoid false positives,
@@ -309,7 +350,13 @@
     <ul>
       <li>SPECTRE-1 hub — <span class="ok">ESTIMATE $120–150 class</span></li>
       <li>SPECTRE POD — <span class="ok">ESTIMATE $40–60 each</span></li>
+      <li>POD LITE — <span class="ok">ESTIMATE $25–35 each</span></li>
       <li>SPECTRE CAM — <span class="ok">ESTIMATE $150–200 class</span></li>
+      <li>SPECTRE CAM THERMAL — <span class="ok">ESTIMATE $350–450 class</span></li>
+      <li>SPECTRE CAM DEPTH — <span class="ok">ESTIMATE $250–350 class</span></li>
+      <li>Geiger module (hub bay) — <span class="ok">ESTIMATE $60–90 class</span></li>
+      <li>Laser grid pen (accessory) — <span class="ok">ESTIMATE $20–30 class</span></li>
+      <li>EM emitter / calibration source (accessory) — <span class="ok">ESTIMATE $30–50 class</span> — the line's own calibration reference source, dual-purposed as the field-experiment emitter investigators call an EM pump. A known field at a known frequency, described physically; no claims attach to it</li>
       <li>Bundle: hub + 2 pods — <span class="ok">ESTIMATE ~$220 class</span></li>
     </ul>
     <p class="dim">Anchors: a K-II-class meter runs ~$60 and shows lights;
