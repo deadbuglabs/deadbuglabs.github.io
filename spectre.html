@@ -245,9 +245,9 @@
     sensor in the building read at 02:13.</p>
     <ul>
       <li><span class="ok">DC magnetic field</span> — 3-axis magnetometer, numeric µT per axis + magnitude</li>
-      <li><span class="ok">AC EMF</span> — sense coil + op-amp front end, calibrated milligauss readout. The K-II function done as an instrument: a number, logged — a spike nobody was watching is still in the record</li>
+      <li><span class="ok">AC EMF</span> — sense coil + op-amp front end, calibrated milligauss readout. Done as an instrument: a number in real units, logged — a spike nobody was watching is still in the record</li>
       <li><span class="ok">AC electric field</span> — E-field probe, numeric V/m readout</li>
-      <li><span class="ok">RF density</span> — broadband RF detector, mW/m² class readout + trend. With the coil, the hub covers the full TriField-class broadband EMF trio — AC magnetic, AC electric, and RF — plus the DC vector the TriField class doesn't give you</li>
+      <li><span class="ok">RF density</span> — broadband RF detector, mW/m² class readout + trend. With the coil, the hub covers the full broadband EMF trio — AC magnetic, AC electric, and RF — plus a DC field vector alongside</li>
       <li><span class="ok">RF sweep</span> — AM/FM/SW receiver, adjustable sweep rate and direction, speaker output. The audio is receiver output — broadcast fragments and band noise, chopped by the sweep — and the sweep settings are logged so a session is reproducible</li>
       <li><span class="ok">EVP recorder</span> — a dedicated audio channel, separate from the sweep receiver: WAV at 48 kHz / 24-bit class to the same card, on the same clock, with live headphone monitoring. A voice on the recording and a fragment off the sweep are never confused in the log</li>
       <li><span class="ok">Temperature / humidity</span> — °C / %RH</li>
@@ -283,13 +283,13 @@
   <section>
     <h2>&gt; spectre_pod</h2>
     <p>The satellites. A small wireless node that sits in a room and
-    watches one thing: a capacitive/EM proximity antenna — the REM-pod
+    watches one thing: a capacitive/EM proximity antenna — the proximity-pod
     function. A field disturbance near the antenna triggers the pod
     locally (RGB LED + buzzer, so the room sees and hears it) <span
     class="ok">and</span> reports to the hub, so the trigger lands in the
     hub's timestamped log with the pod's ID attached, correlated against
     every other channel.</p>
-    <p>The incumbent REM pod beeps in an empty room and tells nobody. A
+    <p>A standalone proximity pod beeps in an empty room and tells nobody. A
     SPECTRE pod's trigger is a row in the record. No display, no card —
     the hub is the recorder, so pods stay cheap enough to run several
     rooms at once. A pod bought later joins the same hub and the same
@@ -316,8 +316,8 @@
       <li><span class="ok">Full-spectrum optics</span> — the sensor ships with no IR-cut filter, the standard full-spectrum conversion used in forensics imaging: sensitive across near-UV, visible, and infrared. Starlight-class low-light sensor — the camera works in dark rooms, not despite them</li>
       <li><span class="ok">Switchable illuminators</span> — 850 nm IR (faint red glow), 940 nm IR (no visible glow), and a 365 nm UVA bank. Every saved frame records which illuminator was on, plus exposure and gain — the same shape under 940 nm and under UVA is different evidence, and the record keeps them separate</li>
       <li><span class="ok">Shape detection that saves the frame</span> — on-device person/shape detection flags a “humanoid shape” event, and the camera saves the actual frame, with its full-spectrum channel data, to microSD and syncs the event into the hub log by timestamp</li>
-      <li><span class="ok">CAM THERMAL</span> — a thermal variant: a Lepton-class radiometric thermal core blended as an overlay with the full-spectrum frame. Both frames are saved, side by side in the record, with the crosshair temperature in the log. A cold spot in the overlay is a temperature map anyone can re-read, not a colour smear. NETD &lt;50 mK class target</li>
-      <li><span class="ok">CAM DEPTH</span> — a depth variant, the SLS function: a depth channel alongside the full-spectrum sensor, with skeletal mapping in the preview. Every mapped-figure event saves the actual depth frame and the full-spectrum frame that produced it — a stick figure drawn over a saved depth frame can be judged against the frame. The overlay is a mapping of depth data, labelled as such, never an identification</li>
+      <li><span class="ok">CAM THERMAL</span> — a thermal variant: a radiometric microbolometer thermal core blended as an overlay with the full-spectrum frame. Both frames are saved, side by side in the record, with the crosshair temperature in the log. A cold spot in the overlay is a temperature map anyone can re-read, not a colour smear. NETD &lt;50 mK class target</li>
+      <li><span class="ok">CAM DEPTH</span> — a depth variant: a depth channel alongside the full-spectrum sensor, with skeletal mapping in the preview. Every mapped-figure event saves the actual depth frame and the full-spectrum frame that produced it — a stick figure drawn over a saved depth frame can be judged against the frame. The overlay is a mapping of depth data, labelled as such, never an identification</li>
       <li><span class="ok">Laser grid</span> — a grid projector pen throws a dot grid across a room; the CAM watches the grid, and a grid break — dots displaced or occluded in a region — is logged as a motion event with the frame saved. The projector is a dumb accessory; the detection and the record live in the CAM, where they belong</li>
     </ul>
     <p><span class="ok">DVR rig mode</span> — professional teams run
@@ -326,13 +326,13 @@
     named mode: multiple CAMs as fixed nodes, hub-synced clocks, and a
     single session manifest covering every node — every camera's events
     and frames on the one hub timeline.</p>
-    <p>The Tesla parallel, stated honestly: a Tesla “sees ghosts” in the
-    cemetery videos because its cameras feed a neural net that renders
+    <p>The car-camera parallel, stated honestly: dashboard cameras that
+    “see ghosts” in cemetery videos feed a neural net that renders
     the shapes it detects — including humanoid false positives,
-    pedestrians drawn on the screen where no person stands. The car shows
-    you a rendering of a detection and keeps no evidence you can
+    figures drawn on the screen where no person stands. The display
+    shows a rendering of a detection and keeps no evidence you can
     re-examine. SPECTRE CAM does the same class of detection
-    deliberately, then does the part the car doesn't: it saves the
+    deliberately, then does the part that matters: it saves the
     photograph. A false positive in this log is a frame anyone can look
     at and dismiss. The detection flag is labelled as what it is — a
     shape classification, not an identification.</p>
@@ -359,8 +359,8 @@
       <li>EM emitter / calibration source (accessory) — <span class="ok">ESTIMATE $30–50 class</span> — the line's own calibration reference source, dual-purposed as the field-experiment emitter investigators call an EM pump. A known field at a known frequency, described physically; no claims attach to it</li>
       <li>Bundle: hub + 2 pods — <span class="ok">ESTIMATE ~$220 class</span></li>
     </ul>
-    <p class="dim">Anchors: a K-II-class meter runs ~$60 and shows lights;
-    a sweep radio runs ~$70 and records nothing; a standalone REM pod
+    <p class="dim">Anchors: a lights-only EMF meter runs ~$60;
+    a sweep radio runs ~$70 and records nothing; a standalone proximity pod
     runs $50–90 and reports to nobody.</p>
   </section>
 
@@ -494,13 +494,13 @@
     { keys:["spectre","paranormal","haunted","haunting","spirit box","rem pod","emf meter","ghost hunting","ghost camera","ghost gear","ghost equipment","investigation gear"],
       reply:"SPECTRE \u2014 the Deadbug Labs line for paranormal investigation. IN DESIGN \u2014 concept stage, not orderable.\nThree pieces, one timestamped log: SPECTRE-1, a multi-sensor hub (3-axis magnetometer, calibrated AC EMF in milligauss, an AM/FM/SW sweep receiver with speaker, temperature / humidity / pressure, vibration, motion) logging every channel to microSD; SPECTRE PODs \u2014 wireless proximity pods that report every trigger into the hub log; and SPECTRE CAM, a full-spectrum night camera whose shape-detection flags save the actual frame.\nThe honest part, stated plainly: this equipment does not detect ghosts. It measures magnetic fields, RF and environment, and records evidence \u2014 interpretation belongs to the investigator.\nEstimates only: hub $120\u2013150 class, pods $40\u201360 each, CAM $150\u2013200 class. The line: <a href=\"spectre.html\">spectre page</a>. Interest list: " + FBL + " or email imp-ai@muse.ai." },
     { keys:["build yours","build your own","custom","configure","configurator","case colour","case color","case options","options","cyberdeck","carrier","carrier board","parts lane","individual boards","board only","raspberry pi"],
-      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to get on the list — then pay in full to set your queue place: first paid, first built.\nPARTS LANE \u2014 the boards on their own, the Raspberry Pi model: fully assembled, powered-on tested, working boards sold individually \u2014 you supply the case, the cells, the screen, the keyboard. Cyberdeck carrier board ESTIMATE $120\u2013180 class; IMP-1 main board ESTIMATE $90\u2013110 class; NFC front-end board ESTIMATE $35\u201345 class; IR/iButton board ESTIMATE $20\u201330 class. Planned with batch one \u2014 not orderable yet. Interest: " + FBL + " or email imp-ai@muse.ai." },
+      reply:"BUILD YOURS \u2014 spec your own IMP-1 on the <a href=\"build.html\">build yours page</a>.\nCase: sponsor-printed enclosure in Stealth Black, IMP Red, or Ghost Clear (final colours confirmed at batch open \u2014 the print sponsor\'s filament decides), no case, or a custom case to discuss \u2014 quoted only if a sponsor printer can produce it.\nThe core is fixed: ESP32-S3-WROOM-1, ST25R3916B NFC, CC1101 Sub-GHz, Waveshare 1.47in 172x320 display. Your picks: SPI flash (W25Q64 or MX25L6406E), Sub-GHz band (915 fitted standard; 868 / 433 built to order \u2014 315 is IMP-2 only), and on the assembled tier, cells and firmware, plus extras.\nThe page composes your request as text \u2014 send it via Facebook or email to get on the list — then pay in full to set your queue place: first paid, first built.\nPARTS LANE \u2014 the boards on their own, the working-board model: fully assembled, powered-on tested, working boards sold individually \u2014 you supply the case, the cells, the screen, the keyboard. Cyberdeck carrier board ESTIMATE $120\u2013180 class; IMP-1 main board ESTIMATE $90\u2013110 class; NFC front-end board ESTIMATE $35\u201345 class; IR/iButton board ESTIMATE $20\u201330 class. Planned with batch one \u2014 not orderable yet. Interest: " + FBL + " or email imp-ai@muse.ai." },
     { keys:["waitlist","wait list","order","orders","order page","blank board","blank boards","bare board","board set","assembled","fully assembled"],
       reply:"Two choices — pay in full to reserve; the build queue is payment order, first paid first built:\n1) BLANK BOARD SET — the three bare PCBs (main, NFC front-end, IR/iButton), unpopulated. ESTIMATE $40 shipped US.\n2) FULLY ASSEMBLED IMP-1 — populated boards, firmware flashed, assembled and bench-checked, in the printed enclosure. ESTIMATE $180 shipped US.\nEstimates: if the final batch price comes in below the amount you paid, the difference is made up with free extras included in your shipment; if it comes in over the estimate, you can top up the difference or take a full refund — and a full refund any time before your build starts. Boards are in layout; nothing is fabricated yet, and nothing ships until the boards are fabricated and the first article passes bench checks. Join via the <a href=\"order.html\">orders page</a> or " + FBL + ".\nPayment is crypto (BTC or XMR), in full, to the addresses on the orders page.\nCustom order? It starts on the <a href=\"build.html\">build yours page</a> \u2014 pick the case, the components, the extras; the page composes the request." },
     { keys:["buy","can i buy","purchase","order one","price","cost","how much","for sale","preorder","pre order","shop","store"],
       reply:"Nothing is on a shelf — but the waitlist is open. Two choices: a blank board set, ESTIMATE $40 shipped US, or a fully assembled IMP-1, ESTIMATE $180 shipped US. Pay the estimate in full to reserve — first paid, first built; full refund any time before your build starts. Details: the <a href=\"order.html\">orders page</a>. Payment is crypto (BTC or XMR), in full, to the addresses on the orders page." },
     { keys:["sub ghz","subghz","433","868","915","cc1101","remote signals"],
-      reply:"Sub-GHz — real, with caveat. CC1101 capture and replay of sub-GHz remotes, Flipper-shaped .sub files, transmit behind a confirm. Capture is FIFO-based at 4.806 kBaud with an RSSI gate — fine for OOK replay, not a logic analyser. Fitted antenna: 915 MHz." },
+      reply:"Sub-GHz — real, with caveat. CC1101 capture and replay of sub-GHz remotes, files in the standard .sub format, transmit behind a confirm. Capture is FIFO-based at 4.806 kBaud with an RSSI gate — fine for OOK replay, not a logic analyser. Fitted antenna: 915 MHz." },
     { keys:["nfc","mifare","ntag","st25r3916b"],
       reply:"NFC — real, with caveat. ST25R3916B front-end: poll cards, read UID/ATQA/SAK, full NTAG read/write support. MIFARE Classic block operations are pending Crypto1 authentication. Receiver tuning is set in situ at bring-up." },
     { keys:["ir","infrared","remote control","tv remote"],
@@ -536,11 +536,11 @@
     { keys:["firmware","source code","github","open source","repo","the code"],
       reply:"Firmware: twelve tools on a frozen C API. Clean build as of 2026-11-16 — 0 errors, 0 warnings, RAM 41.2%, Flash 43.5%. Source and the full build report: <a href=\"https://github.com/deadbuglabs/imp-1\">github.com/deadbuglabs/imp-1</a>." },
     { keys:["what is imp 1","what is the imp 1","what is it","imp 1","specs","spec","hardware","inside","tell me about"],
-      reply:"IMP-1 — a Flipper-class portable hardware exploration device, hand-built. No commercial dev kits. The prototype was built from salvaged electronics; boards you buy are fabricated new.\nBrain: ESP32-S3, native USB. Radios: ST25R3916B NFC, CC1101 Sub-GHz, plus IR.\nScreen: 1.47in 172x320 colour. Storage: socketed SPI flash with a physical write-protect lock, plus microSD.\nPower: 2x 18650 cells in 1S2P — 25.9 Wh. Shell: printed enclosure — the prototype lives in a salvaged Uniden Stealth LRD 767." },
+      reply:"IMP-1 — a pocket portable hardware exploration device, hand-built. No commercial dev kits. The prototype was built from salvaged electronics; boards you buy are fabricated new.\nBrain: ESP32-S3, native USB. Radios: ST25R3916B NFC, CC1101 Sub-GHz, plus IR.\nScreen: 1.47in 172x320 colour. Storage: socketed SPI flash with a physical write-protect lock, plus microSD.\nPower: 2x 18650 cells in 1S2P — 25.9 Wh. Shell: printed enclosure — the prototype lives in a salvaged Uniden Stealth LRD 767." },
     { keys:["salvage","salvaged","termux","phone","how was it made","how is it made","who made","who built","made from","story","the build","designed"],
       reply:"Built the dead-bug way: designed end-to-end on a phone, in Termux — schematics, board layout, firmware, and this site. Salvaged-first parts discipline: donor boards and a salvaged shell, new silicon only where salvage can't go. Three boards — main, NFC front-end, IR — in one stack, sized to the shell." },
     { keys:["flipper","flipper zero"],
-      reply:"Same class as a Flipper Zero — that is the category. The route in is different: designed end-to-end on a phone, a colour 172x320 screen, 25.9 Wh of cells, firmware written for this hardware. The prototype was built from salvaged electronics; boards you buy are fabricated new. And it is not for sale yet — boards first." },
+      reply:"Same category — the pocket hardware explorer class. Our route in is different: designed end-to-end on a phone, a colour 172x320 screen, 25.9 Wh of cells, firmware written for this hardware. The prototype was built from salvaged electronics; boards you buy are fabricated new. And it is not for sale yet — boards first." },
     { keys:["hello","hi","hey","yo","sup"],
       reply:"IMP-AI online. Ask about IMP-1 — specs, build status, the tools, sponsorship. Or tap a topic below." },
     { keys:["thanks","thank you","thx","cheers"],
