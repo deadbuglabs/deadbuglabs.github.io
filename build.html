@@ -227,8 +227,9 @@
       <img src="img/mascot.png" alt="1-bit imp mascot — black imp on red">
     </div>
     <h1 class="glitch" data-text="BUILD YOURS">BUILD YOURS</h1>
-    <p class="tagline">Spec your own IMP-1 — tier, case, components,
-    extras. The page composes your request as text; you send it to get on
+    <p class="tagline">Spec your own IMP-1 — boards first: tier,
+    components, extras. A case is an optional add-on, not the product.
+    The page composes your request as text; you send it to get on
     the list, then pay in full to reserve — first paid, first built.
     Nothing is submitted by this page. <span class="cursor"></span></p>
     <nav>
@@ -257,22 +258,23 @@
     <h2>&gt; tier</h2>
     <fieldset>
       <legend>TIER</legend>
-      <label class="opt"><input type="radio" name="tier" value="blank">
+      <label class="opt"><input type="radio" name="tier" value="blank" checked>
         BLANK BOARD SET — the three bare PCBs (main, NFC front-end,
         IR/iButton), unpopulated. <span class="dim">ESTIMATE $40 shipped US.</span></label>
-      <label class="opt"><input type="radio" name="tier" value="assembled" checked>
-        FULLY ASSEMBLED IMP-1 — populated boards, bench-checked, in the
-        case below. <span class="dim">ESTIMATE $180 shipped US.</span></label>
+      <label class="opt"><input type="radio" name="tier" value="assembled">
+        FULLY ASSEMBLED IMP-1 — the done-for-you option: populated
+        boards, bench-checked, in the case below. <span class="dim">ESTIMATE $180 shipped US.</span></label>
     </fieldset>
   </section>
 
   <section>
-    <h2>&gt; case</h2>
-    <p>The case is produced by our print sponsor — printed for the batch,
+    <h2>&gt; case — optional add-on</h2>
+    <p>We sell boards; 3D printing isn't our main thing. If you want a
+    case, it is produced by our print sponsor — printed for the batch,
     not pulled off a shelf.</p>
     <fieldset>
       <legend>CASE</legend>
-      <label class="opt"><input type="radio" name="case" value="black" checked>
+      <label class="opt"><input type="radio" name="case" value="black">
         Sponsor-printed enclosure — Stealth Black</label>
       <label class="opt"><input type="radio" name="case" value="red">
         Sponsor-printed enclosure — IMP Red</label>
@@ -280,7 +282,7 @@
         Sponsor-printed enclosure — Ghost Clear</label>
       <p class="dim" style="margin:.2em 0 .6em">Final colours are confirmed
       at batch open — the print sponsor's filament decides.</p>
-      <label class="opt"><input type="radio" name="case" value="none">
+      <label class="opt"><input type="radio" name="case" value="none" checked>
         No case — boards only</label>
       <label class="opt"><input type="radio" name="case" value="custom">
         Custom case — discuss</label>
