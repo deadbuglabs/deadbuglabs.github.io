@@ -99,6 +99,7 @@
   .slot{ border:1px solid var(--red); padding:12px 14px; }
   .slot h3{ margin:0 0 4px; color:#fff; font-size:16px; }
   .slot .open{ color:var(--red); letter-spacing:.25em; font-size:13px; }
+  .slot .sponsor a{ color:#fff; font-size:22px; font-weight:bold; letter-spacing:.08em; text-decoration:none; }
   .slot ul{ margin-top:8px; }
   .gallery{ display:grid; grid-template-columns:1fr; gap:18px; }
   @media (min-width:640px){ .gallery{ grid-template-columns:1fr 1fr; } }
@@ -212,12 +213,14 @@
   <section>
     <h2>&gt; status</h2>
     <div class="stat">
-      <p style="margin-top:0"><span class="dim">// 2026-11-16</span></p>
+      <p style="margin-top:0"><span class="dim">// 2026-11-20</span></p>
       <p><span class="ok">Firmware:</span> clean build — 0 errors, 0 warnings
       (ESP32-S3, 12 tools).</p>
-      <p style="margin-bottom:0"><span class="ok">Boards:</span> in layout — main board in respin,
-      NFC board in final routing, IR board complete. Nothing fabricated yet;
-      fabrication is gated on a clean design-rule check.</p>
+      <p style="margin-bottom:0"><span class="ok">Boards:</span> main board v11
+      respin complete — 18 unconnected nets, 0 clearance violations, 0 shorts;
+      a v12 pass is under way. NFC board DRC-clean, IR board complete.
+      Nothing fabricated yet; fabrication is gated on a clean design-rule
+      check.</p>
     </div>
   </section>
 
@@ -225,10 +228,13 @@
     <h2>&gt; sponsors</h2>
     <!-- SPONSOR LOGOS GO HERE: when a sponsorship grant lands, replace that
          slot's OPEN card below with the sponsor's logo + link card. Do not
-         add any name here before a grant is real. -->
-    <p>Two sponsorship slots are open on IMP-1's first fabrication run.
-    Sponsors are featured here the day support lands — logo, link, and credit
-    in every build post that uses their contribution.</p>
+         add any name here before a grant is real.
+         FILLED: Enclosure Printing — PCBWay (granted 2026-11-18).
+         STILL OPEN: PCB + Assembly. -->
+    <p>Sponsors are featured here the day support lands — logo, link, and
+    credit in every build post that uses their contribution. One of the two
+    slots on IMP-1's first fabrication run is filled; the PCB + assembly
+    slot is still open.</p>
     <div class="slots">
       <div class="slot">
         <h3>PCB + ASSEMBLY</h3>
@@ -241,11 +247,11 @@
       </div>
       <div class="slot">
         <h3>ENCLOSURE PRINTING</h3>
-        <div class="open">SPONSOR SLOT — OPEN</div>
+        <div class="sponsor"><a href="https://www.pcbway.com">PCBWay</a></div>
         <ul>
-          <li>Logo + link in this section</li>
-          <li>Featured credit in build-log posts and videos</li>
-          <li>Logo on the project documentation</li>
+          <li>3D-printing sponsor — USD 30 print credit</li>
+          <li>Covers printing of the IMP-1 enclosure (case v3.5)</li>
+          <li>Credit held until the boards are fabricated and fit-checked</li>
         </ul>
       </div>
     </div>
